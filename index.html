@@ -1010,12 +1010,22 @@
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             
-            q.options.forEach((optText, index) => {
+            // ▼ 選択肢のシャッフル処理 ▼
+            // 元のインデックス（正解判定用）を保持したまま配列をコピーしてシャッフル
+            let optionsWithIndex = q.options.map((optText, index) => ({
+                text: optText,
+                originalIndex: index
+            }));
+            
+            optionsWithIndex.sort(() => Math.random() - 0.5); // シャッフル
+            
+            optionsWithIndex.forEach((opt) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'btn btn-option';
-                btn.innerText = optText;
-                btn.onclick = () => handleAnswer(index);
+                btn.innerText = opt.text;
+                btn.dataset.originalIndex = opt.originalIndex; // 判定用に元のインデックスを保存
+                btn.onclick = () => handleAnswer(opt.originalIndex);
                 optionsContainer.appendChild(btn);
             });
 
@@ -1024,18 +1034,22 @@
         }
 
         // --- 解答処理 ---
-        function handleAnswer(selectedIndex) {
+        function handleAnswer(selectedOriginalIndex) {
             clearAutoNext(); // 念のためクリア
             const q = currentQueue[currentIndex];
-            const isCorrect = (selectedIndex === q.answer);
+            const isCorrect = (selectedOriginalIndex === q.answer);
             
             const buttons = document.querySelectorAll('.btn-option');
-            buttons.forEach((btn, idx) => {
+            buttons.forEach((btn) => {
                 btn.disabled = true;
-                if (idx === q.answer) {
+                const btnOriginalIndex = parseInt(btn.dataset.originalIndex, 10);
+                
+                if (btnOriginalIndex === q.answer) {
+                    // 正解のボタンを緑色にする
                     btn.style.backgroundColor = '#dcfce7'; 
                     btn.style.borderColor = '#22c55e';
-                } else if (idx === selectedIndex && !isCorrect) {
+                } else if (btnOriginalIndex === selectedOriginalIndex && !isCorrect) {
+                    // 間違えて選んだボタンを赤色にする
                     btn.style.backgroundColor = '#fee2e2'; 
                     btn.style.borderColor = '#ef4444';
                 }
