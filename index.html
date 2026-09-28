@@ -59,6 +59,11 @@
         .bar-wrap { background: #e2e8f0; border-radius: 6px; height: 12px; margin-top: 6px; overflow: hidden; }
         .bar-fill { height: 100%; transition: width 0.5s ease-out; }
 
+        /* 問題一覧用ナビゲーション（目次）ボタン */
+        .list-nav-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 12px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .btn-list-nav { padding: 6px 12px; border: 1px solid var(--primary); background: #fff; color: var(--primary); border-radius: 16px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-list-nav:hover { background: var(--primary); color: #fff; }
+
         /* Result Styles */
         .feedback { margin-top: 20px; padding: 20px; border-radius: 8px; animation: fadeIn 0.3s ease-in; }
         .feedback.correct { background: #f0fdf4; border: 1px solid #bbf7d0; }
@@ -68,10 +73,23 @@
         .feedback.incorrect .feedback-title { color: var(--incorrect); }
         .explanation { margin-top: 10px; color: #475569; font-size: 0.95rem; white-space: pre-wrap;}
         
-        /* Memo Styles */
+        /* Memo Styles (スマホ長文調整用) */
         .memo-container { margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border); }
-        .memo-title { font-weight: bold; font-size: 0.9rem; color: var(--text); margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .memo-textarea { width: 100%; height: 70px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; resize: vertical; outline: none; }
+        .memo-title { font-weight: bold; font-size: 0.9rem; color: var(--text); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .memo-textarea { 
+            width: 100%; 
+            min-height: 60px; 
+            padding: 10px; 
+            border: 1px solid var(--border); 
+            border-radius: 6px; 
+            font-family: inherit; 
+            font-size: 0.95rem; 
+            line-height: 1.5;
+            resize: none; 
+            overflow-y: hidden; 
+            outline: none; 
+            transition: border-color 0.2s; 
+        }
         .memo-textarea:focus { border-color: var(--primary); }
         .memo-status { font-size: 0.75rem; color: var(--correct); display: none; }
 
@@ -140,11 +158,11 @@
             <div class="quiz-header">
                 <button type="button" class="btn-back" onclick="returnToMenuFromList(event)">← トップメニューに戻る</button>
             </div>
-            <h2 style="margin-bottom: 20px; color: var(--primary);">📋 問題一覧</h2>
+            <h2 style="margin-bottom: 15px; color: var(--primary);">📋 問題一覧</h2>
+            <!-- 各章・模擬試験ジャンプ用ナビゲーション -->
+            <div id="list-nav-container" class="list-nav-container"></div>
             <div id="question-list-container"></div>
-        </div>
-
-        <div id="quiz-view" class="card hidden">
+        </div><div id="quiz-view" class="card hidden">
             <div class="quiz-header">
                 <button type="button" id="btn-back-header" class="btn-back" onclick="returnToMenuFromQuiz(event)">← 中断して戻る</button>
                 <div class="quiz-header-right">
@@ -243,7 +261,9 @@
     {id: "c3_q37", type: "exercise", chapter: 3, text: "Webサイト制作の役割に関する以下の文章は、次のどの担当者に該当するか。\n「Webサイトでのユーザビリティに影響するユーザーインターフェイスの決定、イメージに影響するカラースキームの設計、ビジュアルデザイン作成などを行う。」", options: ["フロントエンドエンジニア", "プログラマー", "デザイナー", "マーケター"], answer: 2, explanation: "デザイナーは、Webサイトでのユーザビリティに影響するユーザーインターフェイスの決定、イメージに影響するカラースキームの設計、ビジュアルデザイン作成などを行う。"},
     {id: "c3_q38", type: "exercise", chapter: 3, text: "Webサイト制作業務に関する以下のリソースについて、通常はソフトウェアに含まれないと考えられるのは、次のどれか。", options: ["CMS", "画像や映像などのデジタル素材", "有償のクラウドサービス", "サーバー"], answer: 3, explanation: "ソフトウェアには、サーバーOS やサーバーソフトウェア、データベース、特殊なプラグインなどWebサービスそのものを動かすためのシステムに関するリソースのほか、CMSなどのWeb アプリケーション、Webサイト上で使用する画像や映像などのデジタル素材、ASPなどの外部サービスや有償のクラウドサービスなどが含まれる。物理的な「サーバー」そのものは、ハードウェアに該当する。\n＜追記＞\n（１）プラグイン：単体では動作しないが、特定のプログラムに追加することで付加価値をつけることのできるソフトウェアのこと。\n（２）ライツマネージド：著作物を特定の期間や回数を定めて貸し出す方式のこと。\n（３）データセンター：各種のコンピュータやデータ通信などの装置を設置・運用することに特化した建物の総称のこと。サーバーを預かり保守・運用サービスを提供している。"},
     {id: "c3_q39", type: "exercise", chapter: 3, text: "スケジュール管理に関する以下の図の説明として正しいのは、次のどれか。", image: "image_0503ae.png", options: ["ある作業内容や成果物に対する意見や改善要望、例えば、デザインの印象、批評、実装した機能の評価など、あらゆる局面で関係者から受ける「フィードバック」という方法", "WBSで作成されたタスクにかかる所要日数をカレンダーにプロットしていき、タスクの完了目標日を明らかにして進捗度を把握する「ガントチャート」という方法", "各タスク間の相関性、依存性を明らかにして、重複進行できるタスクや余裕のないタスクを明らかにする「クリティカルパス」という方法", "企業が適切な発注先を決定するために選定会を実施する「コンペ」という方法"], answer: 2, explanation: "クリティカルパスは、各タスク間の相関性、依存性を明らかにして、重複進行できるタスクや余裕のないタスクを明らかにする方法である。通常、クリティカルパスは絶対に縮めることのできない工程となる。"},
-    {id: "c3_q40", type: "exercise", chapter: 3, text: "Web サイト運用におけるPDCAサイクルの組み合わせとして適切と考えられるのは、次のどれか。", options: ["Plan: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nDo: 目標数値と実績数値を比較する\nCheck: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nAct: CVRなどの目標設定を行う", "Plan: CVRなどの目標設定を行う\nDo: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nCheck:目標数値と実績数値を比較する\nAct: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる", "Plan: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nDo: CVRなどの目標設定を行う\nCheck: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nAct: 目標数値と実績数値を比較する", "Plan:目標数値と実績数値を比較する\nDo: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nCheck: CVRなどの目標設定を行う\nAct: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する"], answer: 1, explanation: "Web サイト運用における PDCAサイクルの例として、まず「Plan」でCVRなどの目標設定を行い、「Do」で広報や広告などのマーケティングやクロスメディアプロモーションを実施したあと、「Check」で目標数値と実績数値を比較し、最後の「Act」では、目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる、といった流れが挙げられる。このようなサイクルの繰り返しによって、Web サイトの成果を高められる。\n＜追記＞\n（１）積算：プロジェクトの完了に必要なすべての費用を割り出す作業。"},// 第4章
+    {id: "c3_q40", type: "exercise", chapter: 3, text: "Web サイト運用におけるPDCAサイクルの組み合わせとして適切と考えられるのは、次のどれか。", options: ["Plan: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nDo: 目標数値と実績数値を比較する\nCheck: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nAct: CVRなどの目標設定を行う", "Plan: CVRなどの目標設定を行う\nDo: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nCheck:目標数値と実績数値を比較する\nAct: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる", "Plan: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nDo: CVRなどの目標設定を行う\nCheck: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する\nAct: 目標数値と実績数値を比較する", "Plan:目標数値と実績数値を比較する\nDo: 目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる\nCheck: CVRなどの目標設定を行う\nAct: 広報や広告などのマーケティングやクロスメディアプロモーションを実施する"], answer: 1, explanation: "Web サイト運用における PDCAサイクルの例として、まず「Plan」でCVRなどの目標設定を行い、「Do」で広報や広告などのマーケティングやクロスメディアプロモーションを実施したあと、「Check」で目標数値と実績数値を比較し、最後の「Act」では、目標を上回っていればそのまま継続し、下回っていれば原因を突き止め、改善案や追加施策を立てる、といった流れが挙げられる。このようなサイクルの繰り返しによって、Web サイトの成果を高められる。\n＜追記＞\n（１）積算：プロジェクトの完了に必要なすべての費用を割り出す作業。"},
+
+// 第4章
     {id: "c4_q41", type: "exercise", chapter: 4, text: "Webサイトの主なパターンに関する以下の文章が該当するのは、次のどれか。\n「特設サイトやプロモーションサイトとも呼ばれる。日常の情報発信が目的ではなく、期間限定や広告連動のサイトが該当する。ブランド・プロダクトサイトに似ているが、ソーシャルメディアと連携して投稿を促したり、アイデアや意見を募集したりと、消費者参加型のしかけを行うことが多い。また、ゲームや動画などのエンターテインメント性を前面に出したサイトもある。」", options: ["ブランド・プロダクトサイト", "キャンペーンサイト", "コーポレートサイト", "ECサイト"], answer: 1, explanation: "キャンペーンサイトは、特設サイトやプロモーションサイトとも呼ばれる。日常の情報発信が目的ではなく、期間限定や広告連動のサイトが該当する。\n＜追記＞\nその他のサイト\n（１）コーポレートサイト：会社概要などを掲載するサイト\n（２）ブランドサイト：ブランド専用のサイト\n（３）プロダクトサイト：製品やサービス専用のサイト\n（４）ECサイト：商品を販売するためのサイト"},
     {id: "c4_q42", type: "exercise", chapter: 4, text: "ECサイトに関する説明として誤りと考えられるものは、次のどれか。", options: ["市場規模としては、B2B型よりもB2C型のほうが大きい", "B2C型には大きく分けて「単品販売型」と「総合販売型」の2つがある", "サイト管理だけでなく、商品管理、売上管理、顧客管理、サポート業務なども必要である", "独自のECサイトを起ち上げるのではなく、ショッピングモールへの出店やクラウドサービスを利用する方法もある"], answer: 0, explanation: "EC(電子商取引)の中でも、B2BはB2Cよりも市場規模が大きく、2022年度は420兆2,354 億円となった。B2Bの例としては、オフィス用品の販売、業務用パソコンの法人販売、部品や原料の調達・貸し出し、人材派遣業、法人向けインターネット回線契約、ネットメディアへの宣伝広告掲載などが挙げられる。\n＜追記＞\n（１）企画フェーズ：分析、調査、戦略立案をする。\n（２）設計フェーズ：要件定義、基本設計をする。\n（３）制作フェーズ：デザイン開発、システム開発、フロントエンドテスト、バックエンドテスト、データ移行をする。"},
     {id: "c4_q43", type: "exercise", chapter: 4, text: "Webサイト制作ワークフローに関する以下の文章は、次のどのフェーズについて説明したものか。\n「公開後、情報発信を継続し、広報や広告活動を交えながらWebサイトの価値向上を目指す。具体的には、サイト内にコンテンツを追加し、プロモーション施策を考え実行しながら、目標の達成度を検証していく。また、セキュリティ上問題があった場合のデバッグ対応や、ユーザーの要望や計画に応じた機能追加などを行う。完成後の大幅な方針変更や構造変更には大きなコストがかかるため、長期的な視野に立って各フェーズの作業内容を設定することが大切である。現在では、アクセス解析などを利用した仮説検証型のWebサイト運用が求められている。日々の運用の中で、改善のためのアクションプランを仮説として立て、実行し、実際に効果があったかどうかを検証する継続的な取り組みが必要である。」", options: ["企画フェーズ", "設計フェーズ", "制作フェーズ", "保守・運用フェーズ"], answer: 3, explanation: "保守・運用フェーズでは、更新作業やプロモーションの実施、アクセス解析などを利用した継続的な仮説検証が求められる。現在では特に、Webマーケティングに関する幅広い取り組みが必要であり、保守・運用フェーズの充実がWeb サイトの成果に直結する。\n＜追記＞\n（１）ラベリング：メニューやボタンなどの表記（ラベル）を考えること。\n（２）ナビゲーション：サイト回遊を行うための、サイト内で共通に配置されたリンク群、文字、視覚情報のこと。"},
@@ -540,7 +560,7 @@
     {
         id: 'm1_q38', type: 'mock', chapter: 0,
         text: 'Webサイトのコンテンツとして、キャンペーンサイトやランディングページを企画することがある。両者に関する説明として正しいと考えられるのは、次のどれか。',
-        options: ['キャンペーンサイトは、主に広告をクリックしたあとの着地を前提にし、Webサイト内の通常のページとは異なり、回遊性などはほぼ考えず、ユーザーの行動(コンバージョン) につなげるための情報を軸に構成する', 'ランディングページは、製品やサービスの周知や話題性を目的として制作するものであり、新規ドメインやサブドメインで大規模に展開する場合や、既存サイトの中でシンプルに展開する場合がある', 'キャンペーンサイトの企画では、製品やサービスの周知を目的として制作することはほぼなく、テクノロジー面での実現可能性も含めて、新規性のある手法や視覚表現をきっかけに、コンテンツを考案するケースはない', 'ランディングページの企画では、ビジュアルを多用し、強いインパクトやメッセージ性を優先したり、リスティング広告やソーシャルメディア広告、クロスメディアで展開する場合はマス広告やチラシなどの紙の広告からの導線設計も踏まえて、適切なコンテンツを考案する'],
+        options: ['キャンペーンサイトは、主に広告をクリックしたあとの着地を前提にし、Webサイト内の通常のページとは異なり、回遊性などはほぼ考えず、ユーザーの行動(コンバージョン) につなげるための情報を軸に構成する', 'ランディングページは、製品やサービスの周知や話題性を目的として制作するものであり、新規ドメインやサブドメインで大規模に展開する場合や、既存サイトの中でシンプルに展開する場合がある', 'キャンペーンサイトの企画では、製品やサービスの周知を目的として制作することはほぼなく、テクノロジー面での実現可能性も含めて、新規性のある手法や視視覚表現をきっかけに、コンテンツを考案するケースはない', 'ランディングページの企画では、ビジュアルを多用し、強いインパクトやメッセージ性を優先したり、リスティング広告やソーシャルメディア広告、クロスメディアで展開する場合はマス広告やチラシなどの紙の広告からの導線設計も踏まえて、適切なコンテンツを考案する'],
         answer: 3, explanation: 'ランディングページ(LP)は、訪問者にコンバージョンを起こさせるためインパクトや強い文脈の統一性、クロスメディア導線との整合性を意識して最適化・企画される。'
     },
     {
@@ -992,7 +1012,9 @@
             document.getElementById('list-view').classList.remove('hidden');
             
             const container = document.getElementById('question-list-container');
+            const navContainer = document.getElementById('list-nav-container');
             container.innerHTML = '';
+            navContainer.innerHTML = '';
             
             const grouped = {};
             quizData.forEach(q => {
@@ -1002,7 +1024,22 @@
             });
             
             for (let key in grouped) {
+                const sectionId = `section-${key}`;
+
+                // ナビゲーション（目次）ボタン生成
+                const navBtn = document.createElement('button');
+                navBtn.type = 'button';
+                navBtn.className = 'btn-list-nav';
+                navBtn.innerText = key;
+                navBtn.onclick = () => {
+                    const el = document.getElementById(sectionId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                };
+                navContainer.appendChild(navBtn);
+
+                // 各章のセクション生成
                 const sec = document.createElement('div');
+                sec.id = sectionId;
                 sec.innerHTML = `<h3 style="margin-top: 20px; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 5px; color: var(--text);">${key}</h3>`;
                 
                 grouped[key].forEach((q) => {
@@ -1088,6 +1125,13 @@
             showQuestion();
         }
 
+        // --- メモ欄の高さを動的に自動調整する関数 ---
+        function autoResizeMemo(element) {
+            if (!element) return;
+            element.style.height = 'auto';
+            element.style.height = element.scrollHeight + 'px';
+        }
+
         // --- 問題表示 ---
         function showQuestion() {
             const q = currentQueue[currentIndex];
@@ -1121,7 +1165,7 @@
 
             document.getElementById('question-text').innerText = q.text;
             
-            // ▼ 画像の表示切り替え ▼
+            // 画像の表示切り替え
             const imgContainer = document.getElementById('question-image-container');
             const imgElement = document.getElementById('question-image');
             if (q.image) {
@@ -1155,10 +1199,11 @@
             document.getElementById('feedback-container').classList.add('hidden');
             document.getElementById('btn-mastered').classList.add('hidden');
             
-            // メモ欄の初期表示設定
+            // メモ欄の初期表示設定と自動高さ調整
             const memoTextarea = document.getElementById('memo-textarea');
             memoTextarea.value = memos[q.id] || '';
             document.getElementById('memo-status').style.display = 'none';
+            autoResizeMemo(memoTextarea);
         }
 
         // --- 解答処理 ---
@@ -1210,14 +1255,21 @@
             document.getElementById('correct-answer-text').innerText = q.options[q.answer];
             document.getElementById('explanation-text').innerText = q.explanation;
             feedbackContainer.classList.remove('hidden');
+
+            // フィードバック表示時にもメモ高さを再調整
+            autoResizeMemo(document.getElementById('memo-textarea'));
         }
 
         // --- メモ保存機能 ---
         let memoTimeout;
         function saveMemo() {
             const q = currentQueue[currentIndex];
-            const memoText = document.getElementById('memo-textarea').value;
+            const memoTextarea = document.getElementById('memo-textarea');
+            const memoText = memoTextarea.value;
             
+            // 入力文字数に合わせて高さを可変調整
+            autoResizeMemo(memoTextarea);
+
             memos[q.id] = memoText;
             localStorage.setItem('webLitMemos', JSON.stringify(memos));
             
